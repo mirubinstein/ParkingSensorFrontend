@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"  href="jquery.mobile-1.2.0/jquery.mobile-1.2.0.css" />  
+
+<script src="jquery.mobile-1.2.0/jquery-1.7.1.min.js"></script>
+<script src="jquery.mobile-1.2.0/jquery.mobile-1.2.0.js"></script>
+<script>
+function loadContent() {
+	var xmlhttp;
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	} else {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange=function() {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+		var content = document.getElementById("parkingspotlist");
+		content.innerHTML = xmlhttp.responseText;
+		$("#parkingspotlist").listview('refresh')
+	  }
+	}
+	xmlhttp.open("GET","userContent.php",true);
+	xmlhttp.send();
+}
+
+function moreInfo(spot,base,value) {
+	var text = "<h2><u>Spot "+spot+"</u></h2>";
+	text += "Baseline Reading: "+base+"<br>";
+	text += "Latest Reading: "+value;
+	var content = document.getElementById("spotinfo");
+	content.innerHTML = text;
+	$( "#info" ).popup("open");
+}
+
+function autoReload() {
+	loadContent();
+	window.setInterval(function(){loadContent()},1000);
+}
+</script>
+</head>
+<body onload="autoReload()">
+	<div data-role="header" data-theme="f">
+		<div align="center"><h1>Parking Occupancy</h1></div>
+	</div>
+	<div data-role="content">
+		<div class="content-primary" id="content-primary">
+		<ul data-role="listview" id="parkingspotlist" data-split-icon="gear" data-split-theme="d">
+		</ul>
+		</div>
+		<div data-role="popup" id="info" data-theme="d" data-overlay-theme="b" class="ui-content" style="max-width:340px;" align="center">
+			<div id="spotinfo"></div>
+			<BR>
+			<a href="#" data-role="button" data-rel="back" data-inline="true" data-mini="true">OK</a>
+		</div>
+	</div>
+</html>
+
+
